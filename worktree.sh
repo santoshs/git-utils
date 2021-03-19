@@ -19,7 +19,6 @@ function wt ()
     fi
 
     repolist=([kernel]=$HOME/dev/repos/kernels/linux
-              [BSD]=$HOME/dev/repos/kernels/freebsd-src
               [ndctl]=$HOME/dev/repos/ndctl
               [skiboot]=$HOME/dev/repos/skiboot
               [bugalert]=$HOME/dev/gws/src/github.com/fossix/bugalert
@@ -32,11 +31,10 @@ function wt ()
         for a in ${areas[@]}; do
             d=`basename $a`
             o=`/usr/bin/echo -e $i. $d [$r] $a`
+
             if [ -n "$filter" ]; then
                 echo $d $r | grep "$filter" > /dev/null
-                if [ $? -ne 0 ]; then
-                    continue
-                fi
+                [ $? -ne 0 ] && continue
             fi
 
             output="$output""$o\n"
@@ -45,9 +43,7 @@ function wt ()
         popd > /dev/null
     done
 
-    [ -z "$output" ] && return
-    [ $i -eq 2 ] && pushd `echo -e $output | tr -d '\n' | cut -f4 -d' '` > /dev/null && return
-
-    dir=`echo -e $output | fzf --with-nth=1..3 --reverse | cut -f4 -d' '`
-    pushd $dir > /dev/null
+    output=`echo $output | head -c -3` # remove the last newline
+    dir=`echo -e $output | fzf --color=dark -1 -0 --with-nth=1..3 --reverse | tr -d '\n' | cut -f4 -d' '`
+    [ -n "$dir" ] && pushd $dir > /dev/null
 }
