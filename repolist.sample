@@ -1,0 +1,5 @@
+kernel=/home/user/kernels/linux
+ndctl=/home/user/repos/ndctl
+bugalert=/home/user/repos/bugalert
+kbuild=/home/user/repos/kbuild
+qemu=/home/user/repos/qemu
